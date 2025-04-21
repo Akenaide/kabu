@@ -20,6 +20,7 @@ class ParticipationAdmin(admin.ModelAdmin):
     list_display = ["pk", "player", "swiss_win", "final_standing", "standing"]
     list_filter = ["standing"]
     search_fields = ["player__name"]  # Assuming player has a name field
+    ordering = ["pk"]
 
 
 @admin.register(models.Standing)
