@@ -1,5 +1,10 @@
+import csv
+from io import StringIO
 from django.contrib import admin
+from django.db import transaction
+from django.http import HttpResponseRedirect
 from tournaments import models
+from tournaments.dataclasses import ParticipationDataFromImport
 # Register your models here.
 
 
@@ -25,5 +30,30 @@ class ParticipationAdmin(admin.ModelAdmin):
 
 @admin.register(models.Standing)
 class StandingAdmin(admin.ModelAdmin):
+    change_form_template = "admin_standing_import_change_form.html"
     list_display = ["pk", "tournament"]
     search_fields = ["tournament__description"]
+
+    def import_csv(self, csv_list, standing):
+        with transaction.atomic():
+            for line in csv_list:
+                models.Participation.objects.create_from_import(
+                    data=ParticipationDataFromImport(
+                        rank=int(line["rank"]),
+                        identifier=line["name"],
+                        swiss_win=int(
+                            line["swiss_win"],
+                        ),
+                    ),
+                    standing=standing,
+                )
+
+    def response_change(self, request, obj):
+        if "_import-standing" in request.POST:
+            csv_file = StringIO(request.POST["new-standing"])
+            reader = csv.DictReader(csv_file)
+            csv_list = list(reader)
+            self.import_csv(csv_list=csv_list, standing=obj)
+            self.message_user(request, "Standing imported")
+            return HttpResponseRedirect(".")
+        return super().response_change(request, obj)

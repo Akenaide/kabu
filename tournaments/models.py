@@ -1,6 +1,28 @@
+from __future__ import annotations
 import datetime
 from typing import override
 from django.db import models
+
+from players.models import Player
+from tournaments.dataclasses import ParticipationDataFromImport
+
+# Managers
+
+
+class ParticipationManager(models.Manager):
+    def create_from_import(
+        self,
+        data: ParticipationDataFromImport,
+        standing: Standing,
+    ) -> Participation:
+        player = Player.objects.get_or_create(identifier=data.identifier)[0]
+        return self.create(
+            player=player,
+            swiss_win=data.swiss_win,
+            final_standing=data.rank,
+            standing=standing,
+        )
+
 
 # Create your models here.
 
@@ -39,6 +61,8 @@ class Participation(models.Model):
     swiss_win = models.PositiveIntegerField()
     final_standing = models.PositiveIntegerField()
     standing = models.ForeignKey("tournaments.Standing", on_delete=models.PROTECT)
+
+    objects = ParticipationManager()
 
     class Meta:
         ordering = ["final_standing"]
