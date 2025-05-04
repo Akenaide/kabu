@@ -7,4 +7,3 @@ from players import models
 class PlayerAdmin(admin.ModelAdmin):
     list_display = ["pk", "identifier", "verbose_name"]
     search_fields = ["identifier", "verbose_name"]
-    ordering = ["identifier"]
