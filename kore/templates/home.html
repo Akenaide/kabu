@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Kabu - Tournament Tracker</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                color: #333;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            header {
+                background: #f4f4f4;
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                text-align: center;
+            }
+            h1 {
+                margin: 0;
+                color: #333;
+            }
+            .stats {
+                display: flex;
+                justify-content: space-around;
+                margin-bottom: 30px;
+            }
+            .stat-card {
+                background: #fff;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                text-align: center;
+                width: 30%;
+            }
+            .stat-number {
+                font-size: 2em;
+                font-weight: bold;
+                color: #0066cc;
+            }
+            .features {
+                margin-bottom: 30px;
+            }
+            .feature-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 20px;
+            }
+            .feature-card {
+                background: #fff;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+            }
+            .recent {
+                margin-bottom: 30px;
+            }
+            .seasons {
+                margin-bottom: 30px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            table,
+            th,
+            td {
+                border: 1px solid #ddd;
+            }
+            th,
+            td {
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            a {
+                color: #0066cc;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .links {
+                margin-top: 20px;
+            }
+            .btn {
+                display: inline-block;
+                background: #0066cc;
+                color: white;
+                padding: 10px 15px;
+                border-radius: 5px;
+                margin-right: 10px;
+                transition: background 0.3s;
+            }
+            .btn:hover {
+                background: #0052a3;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Kabu Tournament Tracker</h1>
+            <p>Manage and track your tournaments, players, and results</p>
+        </header>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ tournaments_count }}</div>
+                <div>Tournaments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ players_count }}</div>
+                <div>Players</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ shops_count }}</div>
+                <div>Shops</div>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Tournament Management</h3>
+                    <p>
+                        Create, organize and track tournaments across different
+                        shops and seasons.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <h3>Player Registry</h3>
+                    <p>
+                        Keep track of all participants and their performance
+                        statistics.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <h3>Match Results</h3>
+                    <p>
+                        Record match outcomes, winners, losers, and special
+                        conditions like double losses.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <h3>Shop Directory</h3>
+                    <p>
+                        Maintain a list of participating venues with their
+                        locations.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <h3>Season Tracking</h3>
+                    <p>
+                        Organize tournaments into seasons with point
+                        calculations.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <h3>Standing Management</h3>
+                    <p>
+                        Import standings via CSV and automatically calculate
+                        points.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="recent">
+            <h2>Recent Tournaments</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Episode</th>
+                        <th>Date</th>
+                        <th>Shop</th>
+                        <th>Season</th>
+                        <th>Description</th>
+                        <th>Standing</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tournament in recent_tournaments %}
+                        <tr>
+                            <td>{{ tournament.number }}</td>
+                            <td>{{ tournament.date }}</td>
+                            <td>{{ tournament.shop.name }}</td>
+                            <td>{{ tournament.season.name }}</td>
+                            <td>{{ tournament.description |truncatechars:50}}</td>
+                            <td>
+                                {% if tournament.standing %}
+                                    <a
+                                        href="{% url 'match-results' tournament.standing.pk %}"
+                                        class="btn btn-sm"
+                                    >View Standing</a
+                                        >
+                                {% else %} No standing {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">No tournaments available</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="seasons">
+            <h2>Active Seasons</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Point Version</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for season in seasons %}
+                        <tr>
+                            <td>{{ season.name }}</td>
+                            <td>{{ season.point_version }}</td>
+                            <td>
+                                <a href="{% url 'season-detail' season.pk %}"
+                                >View Details</a
+                                    >
+                                </td>
+                            </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">No seasons available</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="links">
+            <h2>Quick Links</h2>
+            <div>
+                <a href="{% url 'admin:index' %}" class="btn">Admin Portal</a>
+                <a href="/tournaments/" class="btn">View All Tournaments</a>
+                <a href="/seasons/" class="btn">View All Seasons</a>
+            </div>
+        </section>
+    </body>
+</html>
