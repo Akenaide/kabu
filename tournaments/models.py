@@ -69,6 +69,7 @@ class Participation(models.Model):
 
     @property
     def calculate_point(self):
+        # TODO: export to Season to use `point_version`
         swiss_points = 3 * self.swiss_win
         total_participant = self.standing.participation_set.count()
         total_participant = self.standing.participation_set.count()
@@ -102,3 +103,18 @@ class Standing(models.Model):
     @override
     def __str__(self):
         return f"{self.pk} - for tournament {self.tournament.pk}"
+
+
+class MatchResult(models.Model):
+    winner = models.ForeignKey(
+        "players.Player",
+        related_name="matchs_won",
+        on_delete=models.CASCADE,
+    )
+    loser = models.ForeignKey(
+        "players.Player",
+        related_name="matchs_lost",
+        on_delete=models.CASCADE,
+    )
+    is_double_loss = models.BooleanField(default=False)
+    standing = models.ForeignKey("tournaments.Standing", on_delete=models.CASCADE)

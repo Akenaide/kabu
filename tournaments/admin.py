@@ -57,3 +57,8 @@ class StandingAdmin(admin.ModelAdmin):
             self.message_user(request, "Standing imported")
             return HttpResponseRedirect(".")
         return super().response_change(request, obj)
+
+
+@admin.register(models.MatchResult)
+class MatchResultAdmin(admin.ModelAdmin):
+    list_display = ["pk", "winner", "loser", "is_double_loss", "standing"]
