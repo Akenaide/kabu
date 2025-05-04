@@ -1,0 +1,5 @@
+<ul>
+    {%for season in seasons %}
+        <li> <a href={% url 'season-detail' season.pk %}> {{season.name }}</a></li>
+    {% endfor %}
+</ul>
