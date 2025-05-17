@@ -25,4 +25,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("tournaments.urls")),
     path("", views.home, name="home"),
+    path("stats/", include("players.stats_urls")),
 ]

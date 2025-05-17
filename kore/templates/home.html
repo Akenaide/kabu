@@ -196,6 +196,7 @@
                             <td>{{ tournament.season.name }}</td>
                             <td>{{ tournament.description |truncatechars:50}}</td>
                             <td>
+                                <!-- TODO: True link for standing and separate col for match-results -->
                                 {% if tournament.standing %}
                                     <a
                                         href="{% url 'match-results' tournament.standing.pk %}"
@@ -247,9 +248,9 @@
         <section class="links">
             <h2>Quick Links</h2>
             <div>
-                <a href="{% url 'admin:index' %}" class="btn">Admin Portal</a>
                 <a href="/tournaments/" class="btn">View All Tournaments</a>
                 <a href="/seasons/" class="btn">View All Seasons</a>
+                <a href="/stats/" class="btn">Player Global Statistics</a>
             </div>
         </section>
     </body>
