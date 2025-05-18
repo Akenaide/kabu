@@ -20,4 +20,21 @@
         {% endfor %}
 
     </table>
+
+
+    <div class="table-container">
+        <table class="table is-narrow is-hoverable">
+            <th>win / lost</th>
+            {% for head in players%}
+                <th>{{head}}</th>
+            {% endfor %}
+            {% for stats_row in stats_table %}
+                <tr>
+                    {% for stats in stats_row %}
+                        <td class="{{ stats.css_classes }}">{{stats.val}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}
