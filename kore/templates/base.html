@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" >
+        <title>{% block title %}Kabu{% endblock %}</title>
+        {% block css %}{% endblock %}
+    </head>
+    <body>
+        <header>
+            {% block breadcrumb %}
+            {% endblock %}
+            {% block header %}
+            {% endblock %}
+            <section class="summary my-4">
+                {% block section-header %}
+                {% endblock %}
+            </section>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="mt-6">
+            {% block footer %}
+                <p>© 2025 Kabu</p>
+            {% endblock %}
+        </footer>
+    </body>
+</html>

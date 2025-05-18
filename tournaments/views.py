@@ -1,3 +1,4 @@
+from typing import List
 from django.template.response import SimpleTemplateResponse, TemplateResponse
 from django.shortcuts import get_object_or_404, redirect, reverse
 
@@ -39,10 +40,27 @@ def detail_season(request, pk):
 
 def match_results(request, pk):
     standing = get_object_or_404(models.Standing, pk=pk)
+    # find previous and next
+    standing_ids: List[int] = list(
+        models.Standing.objects.order_by("pk").values_list("pk", flat=True),
+    )
+    standing_index = standing_ids.index(standing.pk)
+    try:
+        previous_standing = standing_ids[standing_index - 1]
+    except IndexError:
+        previous_standing = None
+
+    try:
+        next_standing = standing_ids[standing_index + 1]
+    except IndexError:
+        next_standing = None
+
     context = {
         "standing": standing,
         "match_results": standing.matchresult_set.all(),
         "form": forms.MatchResultForm(players=Player.objects.all()),
+        "previous_standing": previous_standing,
+        "next_standing": next_standing,
     }
 
     return TemplateResponse(

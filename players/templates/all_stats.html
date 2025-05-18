@@ -1,18 +1,23 @@
+{% extends "page.html" %}
 
-<table>
-    <th>Name</th>
+{% block section-header %}
+    <p>This page displays comprehensive player statistics including win rates and match counts across all tournaments.</p>
+{% endblock %}
+{% block content %}
+    <table class="table">
+        <th>Name</th>
+        <th>Win</th>
+        <th>Total</th>
+        <th>Win rate</th>
+        {% for p in players %}
+            <tr>
+                <td>{{ p }}</td>
+                <td>{{ p.won_count}}</td>
+                <td>{{ p.matchs_count }}</td>
+                <td>{{ p.winrate }}</td>
 
-    <th>Win</th>
-    <th>Total</th>
-    <th>Win rate</th>
-    {% for p in players %}
-        <tr>
-            <td>{{ p }}</td>
-            <td>{{ p.won_count}}</td>
-            <td>{{ p.matchs_count }}</td>
-            <td>{{ p.winrate }}</td>
+            </tr>
+        {% endfor %}
 
-        </tr>
-    {% endfor %}
-
-</table>
+    </table>
+{% endblock %}

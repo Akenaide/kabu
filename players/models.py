@@ -1,3 +1,4 @@
+from typing import override
 from django.db import models
 from django.db.models.aggregates import Count
 from django.db.models.functions import Round
@@ -46,5 +47,10 @@ class Player(models.Model):
 
     objects = PlayersManager.from_queryset(PlayersQuerySet)()
 
+    @override
     def __str__(self):
-        return f"{self.pk} - {self.identifier}"
+        return f"{self.identifier}"
+
+    @override
+    def __repr__(self):
+        return f"Player ({self.pk} - {self.identifier})"

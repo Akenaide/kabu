@@ -1,5 +1,12 @@
-<ul>
-    {%for season in seasons %}
-        <li> <a href={% url 'season-detail' season.pk %}> {{season.name }}</a></li>
-    {% endfor %}
-</ul>
+{% extends "page.html" %}
+{% block section-header %}
+    <p>This page provides a simple list of all seasons with links to view details for each one.</p>
+{% endblock %}
+
+{% block content %}
+    <ul>
+        {%for season in seasons %}
+            <li> <a href={% url 'season-detail' season.pk %}> {{season.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

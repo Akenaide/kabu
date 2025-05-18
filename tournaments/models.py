@@ -51,6 +51,10 @@ class Tournament(models.Model):
             ),
         ]
 
+    @property
+    def verbose_name(self):
+        return f"Tournament episode {self.number} for shop {self.shop.name}"
+
     @override
     def __str__(self):
         return f"{self.pk} - Tournament {self.number} shop {self.shop.name}"

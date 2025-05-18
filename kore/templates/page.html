@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+  <nav class="breadcrumb mb-4" aria-label="breadcrumbs">
+    <ul>
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'list-tournaments' %}">Tournaments</a></li>
+      <li><a href="{% url 'all-stats' %}">Stats</a></li>
+    </ul>
+  </nav>
+{% endblock %}

@@ -1,6 +1,25 @@
-<form method="post" action="{% url 'add-match-results' standing.pk %}">
-    {% csrf_token %}
-    {{ form }}
+{% extends "page.html" %}
+
+{% block section-header %}
+    <p>This page displays and allows management of match results for a specific tournament standing, including adding new results and viewing existing ones.</p>
+
+{% endblock %}
+
+
+{% block header %}
+    {% if previous_standing %}
+        <a href={% url 'match-results' previous_standing %}>Previous</a>
+    {% endif %}
+    {% if next_standing %}
+        <a href={% url 'match-results' next_standing %}>Next</a>
+    {% endif %}
+    <h1 class="title">Match Results for: {{ standing.tournament.verbose_name }}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post" action="{% url 'add-match-results' standing.pk %}">
+        {% csrf_token %}
+        {{ form }}
         <!-- <label for="winner">Winner:</label> -->
         <!-- <select name="winner" id="winner"> -->
         <!--     <option value="">-- Select winner --</option> -->
@@ -22,36 +41,40 @@
         <!--     Double Loss -->
         <!-- </label> -->
 
-    <input type="submit" value="Add Match Result">
-</form>
+        <input type="submit" value="Add Match Result">
+    </form>
 <!-- TODO: change name for Shop - episode -->
-<h1>Match Results for {{ standing }}</h1>
 
-{% if match_results %}
-    <table>
-        <thead>
-            <tr>
-                <th>Winner</th>
-                <th>Loser</th>
-                <th>Outcome</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for match in match_results %}
-                <tr>
-                    <td>{{ match.winner }}</td>
-                    <td>{{ match.loser }}</td>
-                    <td>
-                        {% if match.is_double_loss %}
-                            <span class="double-loss">Double Loss</span>
-                        {% else %}
-                            Win
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <p>No match results available for this standing.</p>
-{% endif %}
+
+    <div class="is-flex is-gap-3">
+        {% if match_results %}
+            <table class="table is-hoverable is-striped ">
+                <thead>
+                    <tr>
+                        <th>Winner</th>
+                        <th>Loser</th>
+                        <th>Outcome</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for match in match_results %}
+                        <tr>
+                            <td>{{ match.winner }}</td>
+                            <td>{{ match.loser }}</td>
+                            <td>
+                                {% if match.is_double_loss %}
+                                    <span class="double-loss">Double Loss</span>
+                                {% else %}
+                                    Win
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No match results available for this standing.</p>
+        {% endif %}
+        {% include "includes/_standing-table.html" with tournament=standing.tournament only %}
+    </div>
+{% endblock %}

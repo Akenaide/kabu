@@ -176,7 +176,6 @@ cython_debug/
 
 # repomix
 .repomixignore
-repomix-output.xml
 repomix.config.json
 
 t_static

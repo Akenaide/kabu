@@ -1,22 +1,21 @@
+{% extends "page.html" %}
 
-{% for tournament in tournaments %}
-    <div class="tournament">
-        <span> {{ tournament.shop.name }} {{tournament.number}} </span>
-        {% if tournament.standing %}
-            <table>
-                <th> Place </th>
-                <th> Player </th>
-                <th> Swiss won </th>
-                <th> Points </th>
-                {% for participation in tournament.standing.participation_set.all %}
-                    <tr>
-                        <td> {{participation.final_standing}} </td>
-                        <td> {{participation.player.identifier}} </td>
-                        <td> {{participation.swiss_win}}</td>
-                        <td> {{participation.calculate_point}}</td>
-                {% endfor %}
-            </table>
-        {% endif %}
+{% block section-header %}
+    <p>This page lists all tournaments with their current standings and links to match results.</p>
+{% endblock %}
+
+{% block content %}
+
+    <div class="is-flex is-flex-wrap-wrap is-gap-1	">
+        {% for tournament in tournaments %}
+            {% if tournament.standing %}
+                <div>
+                    <span class="subtitle"> <a href="{% url 'match-results' tournament.standing.pk %}">{{ tournament.verbose_name }} </a></span>
+                    {% include "includes/_standing-table.html" with tournament=tournament only %}
+                </div>
+            {% endif %}
+
+        {% endfor %}
     </div>
 
-{% endfor %}
+{% endblock %}
