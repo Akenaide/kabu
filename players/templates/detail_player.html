@@ -1,0 +1,117 @@
+{% extends "page.html" %}
+
+{% block section-header %}
+    <p>Player details and statistics</p>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <div class="columns">
+                <div class="column is-two-thirds">
+                    <h1 class="title is-2">{{ player.identifier }}</h1>
+                    {% if player.verbose_name %}
+                        <h2 class="subtitle is-4">{{ player.verbose_name }}</h2>
+                    {% endif %}
+                </div>
+                <div class="column">
+                    <div class="buttons is-right">
+                        <a href="{% url 'list-players' %}" class="button is-info">
+                            <span class="icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span>Back to Players</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Statistics Card -->
+        <div class="card mb-5">
+            <header class="card-header">
+                <p class="card-header-title">
+                    Player Statistics
+                </p>
+            </header>
+            <div class="card-content">
+                {% if player.matchs_count %}
+                    <div class="columns">
+                        <div class="column">
+                            <div class="content has-text-centered">
+                                <p class="heading">Matches Played</p>
+                                <p class="title">{{ player.matchs_count|default:"0" }}</p>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="content has-text-centered">
+                                <p class="heading">Matches Won</p>
+                                <p class="title">{{ player.won_count|default:"0" }}</p>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="content has-text-centered">
+                                <p class="heading">Win Rate</p>
+                                <p class="title">{{ player.winrate|default:"0" }}%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress bar representing win rate -->
+                    <progress
+                        class="progress {% if player.winrate > 50 %}is-success{% elif player.winrate == 50 %}is-warning{% else %}is-danger{% endif %}"
+                        value="{{ player.winrate|default:'0' }}"
+                        max="100">
+                        {{ player.winrate|default:"0" }}%
+                    </progress>
+                {% else %}
+                    <div class="notification is-info">
+                        <p>This player has not participated in any matches yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Recent Matches Card -->
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    Recent Matches
+                </p>
+            </header>
+            <div class="card-content">
+                {% if player.matchs_won.all or player.matchs_lost.all %}
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Tournament</th>
+                                <th>Opponent</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for match in player.matchs_won.all %}
+                                <tr>
+                                    <td>{{ match.standing.tournament.verbose_name }}</td>
+                                    <td><a href="{% url 'detail-player' match.loser.pk %}">{{ match.loser }}</a></td>
+                                    <td><span class="tag is-success">Win</span></td>
+                                </tr>
+                            {% endfor %}
+                            {% for match in player.matchs_lost.all %}
+                                <tr>
+                                    <td>{{ match.standing.tournament.verbose_name }}</td>
+                                    <td><a href="{% url 'detail-player' match.winner.pk %}">{{ match.winner }}</a></td>
+                                    <td><span class="tag is-danger">Loss</span></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="notification is-info">
+                        <p>No match history available for this player.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

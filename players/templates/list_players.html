@@ -1,0 +1,37 @@
+{% extends "page.html" %}
+
+{% block section-header %}
+    <p>This page displays a list of all registered players.</p>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="title">Players</h1>
+
+        <div class="columns is-multiline">
+            {% for player in players %}
+                <div class="column is-one-third">
+                    <div class="card">
+                        <div class="card-content">
+                            <p class="title is-4">{{ player.identifier }}</p>
+                            {% if player.verbose_name %}
+                                <p class="subtitle is-6">{{ player.verbose_name }}</p>
+                            {% endif %}
+                        </div>
+                        <footer class="card-footer">
+                            <a href="{% url 'detail-player' player.pk %}" class="card-footer-item">
+                                View Details
+                            </a>
+                        </footer>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="column is-full">
+                    <div class="notification is-info">
+                        <p class="has-text-centered">No players registered yet.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

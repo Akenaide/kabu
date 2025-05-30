@@ -11,11 +11,10 @@
         <th>Win rate</th>
         {% for p in players %}
             <tr>
-                <td>{{ p }}</td>
+                <td><a href="{% url 'detail-player' p.pk %}">{{ p }}</a></td>
                 <td>{{ p.won_count}}</td>
                 <td>{{ p.matchs_count }}</td>
                 <td>{{ p.winrate }}</td>
-
             </tr>
         {% endfor %}
 
@@ -26,12 +25,16 @@
         <table class="table is-narrow is-hoverable">
             <th>win / lost</th>
             {% for head in players%}
-                <th>{{head}}</th>
+                <th><a href="{% url 'detail-player' head.pk %}">{{head}}</a></th>
             {% endfor %}
             {% for stats_row in stats_table %}
                 <tr>
                     {% for stats in stats_row %}
-                        <td class="{{ stats.css_classes }}">{{stats.val}}</td>
+                        {% if forloop.first %}
+                            <td class="{{ stats.css_classes }}"><a href="{% url 'detail-player' stats.player.pk %}">{{stats.val}}</a></td>
+                        {% else %}
+                            <td class="{{ stats.css_classes }}">{{stats.val}}</td>
+                        {% endif %}
                     {% endfor %}
                 </tr>
             {% endfor %}

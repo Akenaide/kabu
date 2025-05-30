@@ -1,9 +1,15 @@
+from __future__ import annotations
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from players.models import Player
 
 
 @dataclass
 class PlayerStatsVsPlayer:
     val: float | None | str
+    player: Player | None = None
 
     @property
     def css_classes(self):

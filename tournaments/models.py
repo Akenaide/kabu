@@ -56,7 +56,7 @@ class Tournament(models.Model):
         return f"Tournament episode {self.number} for shop {self.shop.name}"
 
     @override
-    def __str__(self):
+    def __repr__(self):
         return f"{self.pk} - Tournament {self.number} shop {self.shop.name}"
 
 

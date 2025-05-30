@@ -26,4 +26,5 @@ urlpatterns = [
     path("", include("tournaments.urls")),
     path("", views.home, name="home"),
     path("stats/", include("players.stats_urls")),
+    path("players/", include("players.urls")),
 ]
