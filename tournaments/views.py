@@ -1,6 +1,7 @@
 from typing import List
 from django.template.response import SimpleTemplateResponse, TemplateResponse
 from django.shortcuts import get_object_or_404, redirect, reverse
+from django.http import HttpRequest
 
 from players.models import Player
 from tournaments import forms, models
@@ -90,3 +91,82 @@ def add_match_results(request, pk):
 
         return redirect(reverse("match-results", args=[standing.pk]))
     return redirect("/")
+
+
+def quick_match_results(request: HttpRequest, pk: int):
+    """
+    A mobile-first view for quickly adding match results with a default player.
+
+    Query parameters:
+    - player_id: The default player to use
+    """
+    standing = get_object_or_404(models.Standing, pk=pk)
+
+    # Get default player from query parameters
+    default_player_id = request.GET.get("player_id")
+    default_player = None
+    if default_player_id:
+        default_player = get_object_or_404(Player, pk=default_player_id)
+
+    # Get all players for the opponent selection
+    all_players = Player.objects.all()
+
+    if request.method == "POST":
+        data = request.POST
+        outcome = data.get("outcome")
+        opponent_id = data.get("opponent")
+
+        if not default_player or not opponent_id or not outcome:
+            # Return error if any required data is missing
+            context = {
+                "standing": standing,
+                "default_player": default_player,
+                "all_players": all_players,
+                "error": "Please select all required fields",
+            }
+            return TemplateResponse(
+                request=request,
+                template="quick_match_results.html",
+                context=context,
+            )
+
+        opponent = get_object_or_404(Player, pk=opponent_id)
+
+        # Create match result based on outcome
+        if outcome == "win":
+            winner = default_player
+            loser = opponent
+            is_double_loss = False
+        elif outcome == "loss":
+            winner = opponent
+            loser = default_player
+            is_double_loss = False
+        else:  # double_loss
+            winner = default_player
+            loser = opponent
+            is_double_loss = True
+
+        models.MatchResult.objects.create(
+            standing=standing,
+            winner=winner,
+            loser=loser,
+            is_double_loss=is_double_loss,
+        )
+
+        # Redirect to the same page to add more results
+        # Keep the player_id in the query parameters
+        redirect_url = f"{reverse('quick-match-results', args=[standing.pk])}?player_id={default_player.pk}"
+        return redirect(redirect_url)
+
+    # Handle GET request
+    context = {
+        "standing": standing,
+        "default_player": default_player,
+        "all_players": all_players,
+    }
+
+    return TemplateResponse(
+        request=request,
+        template="quick_match_results.html",
+        context=context,
+    )

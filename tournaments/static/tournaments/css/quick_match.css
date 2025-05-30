@@ -1,0 +1,68 @@
+/* Mobile-first CSS for Quick Match Results */
+@media screen and (max-width: 768px) {
+    .mobile-sized-text {
+        font-size: 0.9rem !important;
+    }
+
+    .mobile-small-text {
+        font-size: 0.85rem !important;
+    }
+
+    .mobile-tight-padding {
+        padding: 0.4rem 0.5rem !important;
+    }
+
+    .mobile-tight-margin {
+        margin-bottom: 0.6rem !important;
+    }
+
+    .mobile-column-buttons {
+        flex-direction: column !important;
+    }
+}
+
+/* Header styles */
+.header-border {
+    border-bottom: 1px solid #3298dc;
+}
+
+.tournament-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Section dividers */
+.section-divider {
+    border-top: 1px solid #dbdbdb;
+}
+
+.player-badge {
+    background-color: #3298dc;
+    color: white;
+    padding: 0.3rem 0.75rem;
+    border-radius: 16px;
+    display: inline-block;
+}
+
+.player-select-button {
+    margin: 0.2rem;
+    flex-grow: 1;
+    font-size: 0.85rem;
+}
+
+.player-button-grid {
+    margin-top: 0.75rem;
+}
+
+.player-highlight-border {
+    border-left: 4px solid #3298dc;
+}
+
+/* Media query for desktop */
+@media screen and (min-width: 768px) {
+    .content-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+}

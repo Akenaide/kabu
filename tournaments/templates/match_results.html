@@ -14,6 +14,14 @@
         <a href={% url 'match-results' next_standing %}>Next</a>
     {% endif %}
     <h1 class="title">Match Results for: {{ standing.tournament.verbose_name }}</h1>
+    <div class="buttons">
+        <a href="{% url 'quick-match-results' standing.pk %}" class="button is-primary is-small">
+            <span class="icon">
+                <i class="fas fa-bolt"></i>
+            </span>
+            <span>Quick Match Entry</span>
+        </a>
+    </div>
 {% endblock %}
 
 {% block content %}

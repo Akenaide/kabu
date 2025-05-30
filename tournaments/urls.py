@@ -12,4 +12,9 @@ urlpatterns = [
         views.add_match_results,
         name="add-match-results",
     ),
+    path(
+        "standing/<int:pk>/quick-match-results/",
+        views.quick_match_results,
+        name="quick-match-results",
+    ),
 ]
